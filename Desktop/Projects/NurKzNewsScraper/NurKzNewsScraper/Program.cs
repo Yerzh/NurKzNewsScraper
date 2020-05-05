@@ -27,7 +27,7 @@ namespace NurKzNewsScraper
             var popularNewsLinks = new List<string>();
             var html = GetHtml(url);
             var links = html.CssSelect("div.block-top-latest a");
-
+             
             foreach(var link in links)
             {
                 if (link.Attributes["href"].Value.Contains(".html"))
