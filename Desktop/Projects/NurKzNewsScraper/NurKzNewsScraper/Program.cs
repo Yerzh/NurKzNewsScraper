@@ -1,9 +1,9 @@
-﻿using System;
-using ScrapySharp;
-using HtmlAgilityPack;
-using ScrapySharp.Network;
-using System.Collections.Generic;
+﻿using HtmlAgilityPack;
 using ScrapySharp.Extensions;
+using ScrapySharp.Network;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NurKzNewsScraper
 {
@@ -14,6 +14,14 @@ namespace NurKzNewsScraper
         static void Main(string[] args)
         {
             var popularNews = GetPopularNewsLinks("https://www.nur.kz/");
+            var newsDetails = GetPageDetails(popularNews);
+
+            foreach(var detail in newsDetails)
+            {
+                Console.WriteLine(detail.Title);
+                Console.WriteLine(detail.Description);
+                Console.WriteLine("\n\n");
+            }
         }
 
         private static HtmlNode GetHtml(string url)
@@ -45,7 +53,10 @@ namespace NurKzNewsScraper
             {
                 var htmlNode = GetHtml(url);
                 var detail = new PageDetail();
-
+                detail.Title = htmlNode.CssSelect("div.fb-quotable h1").Single().InnerText;
+                detail.Description = htmlNode.CssSelect("p.align-left strong").First().InnerText;
+                detail.Url = url;
+                pageDetails.Add(detail);
             }
             return pageDetails;
         }
